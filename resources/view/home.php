@@ -1,4 +1,5 @@
 <?php
+require_once('vendor/autoload.php');
 require_once('app/Controller/IyzicoController.php');
 
 use App\Controller\IyzicoController;
