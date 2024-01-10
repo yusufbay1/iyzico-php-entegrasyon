@@ -22,8 +22,8 @@ class Iyzico
     public static function options() // Iyzico key ayarları
     {
         self::$options = new Options;
-        self::$options->setApiKey("sandbox-lt2WB9gUJVBA7nvWBkJOQSyJcBx8zFHT");
-        self::$options->setSecretKey("sandbox-TQyrt5Tu4MiUpBjYduHiFRcBhywbEw3D");
+        self::$options->setApiKey("sandbox-your_api_key");
+        self::$options->setSecretKey("sandbox-your_secret_key");
         self::$options->setBaseUrl("https://sandbox-api.iyzipay.com");
         return new self;
     }
