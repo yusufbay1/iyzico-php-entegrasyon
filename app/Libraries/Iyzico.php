@@ -88,7 +88,8 @@ class Iyzico
     public static function basketItems($basket, $cargo) // Sepetten gelen ürünleri yazdırma 
     {
         $set_cargo_price = $cargo->set_cargo_price;
-        $basketTotal = 0;
+        $total = 0;
+        $basketItems = array();
         foreach ($basket as $baskets) {
             $product = DB::table('products')->where(['product_id' => $baskets->product_id])->first();
             $cat = DB::table('category')->where(['cat_id' => 1])->first();
@@ -98,17 +99,17 @@ class Iyzico
             $item->setCategory1($cat->cat_title);
             $item->setItemType(BasketItemType::PHYSICAL);
             $item->setPrice(($product->product_price * $baskets->product_piece));
-            $basketTotal += $product->product_price * $baskets->product_piece;
-            if (($cargo->set_cargo) > ($basketTotal) && empty($basketItems)) { // sepet toplamı kargo eşiğinden küçükse kargo fiyatını ekletiyoruz
-                $shippingItem = new BasketItem();
-                $shippingItem->setId($baskets->basket_id);
-                $shippingItem->setName($product->product_title);
-                $shippingItem->setCategory1($cat->cat_title);
-                $shippingItem->setItemType(BasketItemType::VIRTUAL);
-                $shippingItem->setPrice($set_cargo_price);
-                $basketItems[] = $shippingItem;
-            }
+            $total += $product->product_price * $baskets->product_piece;
             $basketItems[] = $item;
+        }
+        if (($cargo->set_cargo) > ($total) && !empty($basketItems)) {
+            $shippingItem = new BasketItem();
+            $shippingItem->setId($baskets->basket_id);
+            $shippingItem->setName($product->product_title);
+            $shippingItem->setCategory1($cat->cat_title);
+            $shippingItem->setItemType(BasketItemType::VIRTUAL);
+            $shippingItem->setPrice($set_cargo_price);
+            $basketItems[] = $shippingItem;
         }
         self::$request->setBasketItems($basketItems);
         return new self;
